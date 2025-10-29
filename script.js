@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. CAROUSEL LOGIC ---
+    // --- 1. CAROUSEL LOGIC (Remains for infinite loop) ---
     const carouselTrack = document.querySelector('.carousel-track');
     const projectCards = document.querySelectorAll('.project-card');
     const leftArrow = document.querySelector('.nav-arrow.left');
@@ -11,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // When showing only 1 card, the display count for limits is always 1.
     const itemsPerDisplay = 1; 
 
-    /**
-     * Updates the carousel position and active card class.
-     */
     const updateCarousel = () => {
         
         // 1. Calculate Offset (Always shift by the full width of one card)
@@ -29,13 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('active');
             }
         });
-        
-        // 3. Arrow disabling logic is REMOVED for infinite loop.
     };
 
     // Initial load/resize logic
     window.addEventListener('resize', () => {
-        // Reset to first card on resize
         currentIndex = 0; 
         updateCarousel();
     });
@@ -45,37 +39,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Manual Navigation (Infinite Loop Implemented) ---
     leftArrow.addEventListener('click', () => {
-        // Decrement index. If it goes below 0 (before the first card), wrap to the last card.
         currentIndex = (currentIndex - 1 + totalCards) % totalCards;
         updateCarousel();
     });
 
     rightArrow.addEventListener('click', () => {
-        // Increment index. If it hits totalCards (after the last card), wrap to the first card (0).
         currentIndex = (currentIndex + 1) % totalCards;
         updateCarousel();
     });
 
-    // --- 2. VIDEO ON HOVER LOGIC (Stop and Reset) ---
+    // --- 2. GIF ON HOVER LOGIC (NEW IMPLEMENTATION) ---
     document.querySelectorAll('.card-media-wrapper').forEach(wrapper => {
-        const video = wrapper.querySelector('.project-video');
+        const gifElement = wrapper.querySelector('.project-media-gif');
+        const overlay = wrapper.querySelector('.video-overlay');
 
-        // Play video on hover
+        if (!gifElement) return; // Skip if element not found
+
+        // Store the static poster source for reset
+        const posterSrc = gifElement.src; 
+        // Get the high-resolution GIF source from the data attribute
+        const gifSrc = gifElement.getAttribute('data-gif-src'); 
+
+        // Load GIF on hover
         wrapper.addEventListener('mouseenter', () => {
-            if (video) {
-                video.currentTime = 0; // Rewind to start
-                video.play();
-            }
+            // Swap the static poster source for the animated GIF source
+            gifElement.src = gifSrc;
+            // Hide the overlay
+            if (overlay) overlay.style.opacity = '0';
         });
 
-        // Stop video and reset to poster on mouse leave
+        // Reset to poster on mouse leave
         wrapper.addEventListener('mouseleave', () => {
-            if (video) {
-                video.pause();
-                video.currentTime = 0; 
-                // CRITICAL FIX: Forces the video element to display the 'poster' attribute again.
-                video.load(); 
-            }
+            // Swap the GIF source back to the static poster source
+            gifElement.src = posterSrc;
+            // Show the overlay again
+            if (overlay) overlay.style.opacity = '1';
         });
     });
 });
