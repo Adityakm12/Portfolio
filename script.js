@@ -49,31 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 2. GIF ON HOVER LOGIC (NEW IMPLEMENTATION) ---
-    document.querySelectorAll('.card-media-wrapper').forEach(wrapper => {
-        const gifElement = wrapper.querySelector('.project-media-gif');
-        const overlay = wrapper.querySelector('.video-overlay');
+	// Change the selector from '.card-media-wrapper' to '.project-media-link'
+	document.querySelectorAll('.project-media-link').forEach(linkElement => {
+    // Find the relevant elements relative to the link (the parent)
+    const gifElement = linkElement.querySelector('.project-media-gif');
+    const overlay = linkElement.querySelector('.video-overlay');
 
-        if (!gifElement) return; // Skip if element not found
+    if (!gifElement) return;
 
-        // Store the static poster source for reset
-        const posterSrc = gifElement.src; 
-        // Get the high-resolution GIF source from the data attribute
-        const gifSrc = gifElement.getAttribute('data-gif-src'); 
+    const posterSrc = gifElement.src; 
+    const gifSrc = gifElement.getAttribute('data-gif-src'); 
 
-        // Load GIF on hover
-        wrapper.addEventListener('mouseenter', () => {
-            // Swap the static poster source for the animated GIF source
-            gifElement.src = gifSrc;
-            // Hide the overlay
-            if (overlay) overlay.style.opacity = '0';
-        });
-
-        // Reset to poster on mouse leave
-        wrapper.addEventListener('mouseleave', () => {
-            // Swap the GIF source back to the static poster source
-            gifElement.src = posterSrc;
-            // Show the overlay again
-            if (overlay) overlay.style.opacity = '1';
-        });
+    // Load GIF on hover (mouseenter)
+    linkElement.addEventListener('mouseenter', () => {
+        // Swap the static poster source for the animated GIF source
+        gifElement.src = gifSrc;
+        // Hide the overlay
+        if (overlay) overlay.style.opacity = '0';
     });
+
+    // Reset to poster on mouse leave
+    linkElement.addEventListener('mouseleave', () => {
+        // Swap the GIF source back to the static poster source
+        gifElement.src = posterSrc;
+        // Show the overlay again
+        if (overlay) overlay.style.opacity = '1';
+    });
+	});
 });
