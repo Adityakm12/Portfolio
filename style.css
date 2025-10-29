@@ -292,7 +292,10 @@ section {
     padding: 25px;
     text-align: center;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin: 0 15px; /* Spacing for the sides */
+    
+    /* FIX: Set horizontal margins to 0. Vertically can be kept if desired. */
+    margin: 0; 
+    
     transform: scale(0.95);
     opacity: 0.8;
     transition: transform 0.4s ease, opacity 0.4s ease;
@@ -513,9 +516,9 @@ section {
 @media (min-width: 769px) {
     /* Desktop/Tablet Styles for Carousel */
     .project-card {
-        /* FIX: Ensures only 1 card is visible by calculating 100% width minus margins */
-        min-width: calc(100% - 30px);
-        flex: 0 0 calc(100% - 30px);
+        /* FIX: Simple 100% width since margins were removed */
+        min-width: 100%;
+        flex: 0 0 100%;
     }
 }
 
